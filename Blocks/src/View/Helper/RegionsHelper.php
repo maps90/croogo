@@ -51,7 +51,7 @@ class RegionsHelper extends Helper {
  * @param array $options
  * @return string
  */
-	public function block(Block $block, $options = array()) {
+	public function block(Block $block, $regionAlias, $options = array()) {
 		$output = '';
 
 		$options = Hash::merge(array(
@@ -80,6 +80,18 @@ class RegionsHelper extends Helper {
 				), LOG_WARNING);
 			}
 			$blockOutput = $this->_View->element($defaultElement, compact('block'), array('ignoreMissing' => true) + $elementOptions);
+		}
+
+		if ($block->get('cell')) {
+			$parts = explode('::', $block->get('cell'));
+
+			if (count($parts) === 2) {
+				list($pluginAndCell, $action) = [$parts[0], $parts[1]];
+			} else {
+				list($pluginAndCell, $action) = [$parts[0], $regionAlias];
+			}
+
+			$blockOutput = $this->_View->cell($pluginAndCell . '::' . $action);
 		}
 
 		Croogo::dispatchEvent('Helper.Regions.afterSetBlock', $this->_View, array(
@@ -123,7 +135,7 @@ class RegionsHelper extends Helper {
 		$defaultElement = 'Croogo/Blocks.block';
 		$blocks = $this->_View->viewVars['blocks_for_layout'][$regionAlias];
 		foreach ($blocks as $block) {
-			$output .= $this->block($block, $options);
+			$output .= $this->block($block,$regionAlias, $options);
 		}
 
 		return $output;
