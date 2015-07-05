@@ -5,6 +5,7 @@ namespace Croogo\Blocks\View\Helper;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\View\Helper;
+use Croogo\Blocks\Catalog;
 use Croogo\Blocks\Model\Entity\Block;
 use Croogo\Core\Croogo;
 
@@ -85,13 +86,14 @@ class RegionsHelper extends Helper {
 		if ($block->get('cell')) {
 			$parts = explode('::', $block->get('cell'));
 
+			$regionInfo = Catalog::regionInfo($block->get('cell'), $regionAlias);
 			if (count($parts) === 2) {
 				list($pluginAndCell, $action) = [$parts[0], $parts[1]];
 			} else {
-				list($pluginAndCell, $action) = [$parts[0], $regionAlias];
+				list($pluginAndCell, $action) = [$parts[0], $regionInfo['method']];
 			}
 
-			$blockOutput = $this->_View->cell($pluginAndCell . '::' . $action);
+			$blockOutput = (string) $this->_View->cell($pluginAndCell . '::' . $action);
 		}
 
 		Croogo::dispatchEvent('Helper.Regions.afterSetBlock', $this->_View, array(
@@ -135,7 +137,7 @@ class RegionsHelper extends Helper {
 		$defaultElement = 'Croogo/Blocks.block';
 		$blocks = $this->_View->viewVars['blocks_for_layout'][$regionAlias];
 		foreach ($blocks as $block) {
-			$output .= $this->block($block,$regionAlias, $options);
+			$output .= $this->block($block, $regionAlias, $options);
 		}
 
 		return $output;
