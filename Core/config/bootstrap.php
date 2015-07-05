@@ -3,6 +3,7 @@
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Database\Type;
+use Croogo\Blocks\Catalog as BlocksCatalog;
 use Croogo\Core\Croogo;
 
 // Map our custom types
@@ -14,6 +15,18 @@ Configure::write(
 	'DebugKit.panels',
 	array_merge((array)Configure::read('DebugKit.panels'), ['Croogo/Core.Plugins'])
 );
+
+BlocksCatalog::register('Croogo/Core.BlogFeed', [
+	'title' => 'Croogo blog feed',
+	'description' => 'Shows the Croogo blog feed',
+	'regions' => [
+		'dashboard' => []
+	],
+	'regionAliases' => [
+		'right' => 'dashboard',
+		'sidebar' => 'dashboard',
+	]
+]);
 
 require_once 'croogo_bootstrap.php';
 
