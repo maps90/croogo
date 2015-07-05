@@ -11,3 +11,8 @@ CroogoRouter::connect('/admin/blocks/regions/:action/*', array(
 	'prefix' => 'admin',
 	'plugin' => 'Croogo/Blocks', 'controller' => 'Regions',
 ));
+
+CroogoRouter::connect('/admin/blocks/catalog/:action/*', array(
+	'prefix' => 'admin',
+	'plugin' => 'Croogo/Blocks', 'controller' => 'Catalog',
+));
